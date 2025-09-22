@@ -1,38 +1,45 @@
-pyrofork
-git+https://github.com/KurimuzonAkuma/pyrogram
-tgcrypto
-pymongo==3.12.3 
+# --- Telegram client ---
+git+https://github.com/KurimuzonAkuma/pyrogram   # Pyrofork (Pyrogram fork)
+tgcrypto==1.2.3
+
+# --- MongoDB stack ---
+pymongo==3.12.3
 motor==2.5.1
-marshmallow==3.20.1
 umongo==3.0.1
+marshmallow==3.20.1
+dnspython
+
+# --- Web & scraping ---
 requests
+aiohttp==3.7.4
 bs4
-git+https://github.com/Joelkb/cinemagoer
-Heroku3
-search_engine_parser
 wget
-aiofiles
+search_engine_parser
+ujson
+
+# --- Media & YouTube ---
 ffmpeg-python
 ffmpeg
-youtube_search
-youtube-search-python==1.4.6
 yt-dlp
 youtube-dl
 youtube_search
-requests
-aiohttp==3.7.4
+youtube-search-python==1.4.6
+
+# --- Extra APIs & tools ---
+git+https://github.com/Joelkb/cinemagoer   # IMDb (fork of imdbpy)
 gTTS
-googletrans
+googletrans==4.0.0-rc1
 telegraph
 PyPDF2
-ujson
 pyshorteners
 countryinfo
-datetime
 pytz
-dnspython 
-aiohttp
 python-math
 Pillow
 speedtest-cli
 python-dotenv
+datetime   # (can remove – comes with Python stdlib)
+
+# --- Deployment ---
+Heroku3
+aiofiles
