@@ -10,7 +10,7 @@ import json
 from collections import defaultdict
 from typing import Dict, List, Union
 from pyrogram import Client
-REQ_CHANNEL=environ.get("REQ_CHANNEL", '-1002869987255')
+REQ_CHANNEL=environ.get("REQ_CHANNEL", '-1003113750964')
 
 load_dotenv("./dynamic.env", override=True)
 id_pattern = re.compile(r'^.\d+$')
@@ -88,8 +88,8 @@ DOWNLOAD_LOCATION = environ.get("DOWNLOAD_LOCATION", "./DOWNLOADS/AudioBoT/")
 DELETE_CHANNELS = [int(dch) if id_pattern.search(dch) else dch for dch in environ.get('DELETE_CHANNELS', '').split()]
 PORT = os.environ.get("PORT", "3124")
 MAX_BTN = int(environ.get('MAX_BTN', "10"))
-S_GROUP = environ.get('S_GROUP',"https://t.me/+RkNQ8qFWP5liYTll")
-MAIN_CHANNEL = environ.get('MAIN_CHANNEL',"https://t.me/+s2f49t6Ma0YyYWE9")
+S_GROUP = environ.get('S_GROUP',"https://t.me/+QiSZO0vHKMA4YjJl")
+MAIN_CHANNEL = environ.get('MAIN_CHANNEL',"https://t.me/+QiSZO0vHKMA4YjJl")
 FILE_FORWARD = environ.get('FILE_FORWARD',"")
 MSG_ALRT = environ.get('MSG_ALRT', '𝐓𝐡𝐚𝐧𝐤 𝐲𝐨𝐮 THEwick 💜')
 FILE_CHANNEL = int(environ.get('FILE_CHANNEL', "-1002843083384"))
