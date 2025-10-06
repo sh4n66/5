@@ -46,7 +46,7 @@ class evamaria(Client):
 SESSION = environ.get('SESSION', 'Media_search')
 API_ID = int(environ.get('API_ID', '25407909'))
 API_HASH = environ.get('API_HASH', '4c4acf0be5eece278dc4f3baacc44eca')
-BOT_TOKEN = environ.get('BOT_TOKEN', '8226320248:AAE_lHomS1MTRxBGlxdWWS-OEPXORt8YiJo')
+BOT_TOKEN = environ.get('BOT_TOKEN', '7894004223:AAH8jhh1FXvLY_HXgTTO5Srj3t5qZUQ6IBg')
 
 # Bot settings
 CACHE_TIME = int(environ.get('CACHE_TIME', 300))
@@ -76,24 +76,24 @@ TMP_DOWNLOAD_DIRECTORY = environ.get("TMP_DOWNLOAD_DIRECTORY", "./DOWNLOADS/")
 COMMAND_HAND_LER = environ.get("COMMAND_HAND_LER", "/")
 
 # MongoDB information
-DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://drthangu_db_user:Shanusonu99@cluster0.xbcskfy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://filter6:filter6@cluster0.hzvvygf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 DATABASE_NAME = environ.get('DATABASE_NAME', "Cluster0")
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Tele_file1')
-MONGO_URL = os.environ.get('MONGO_URL', "mongodb+srv://drthangu_db_user:Shanusonu99@cluster0.xbcskfy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+MONGO_URL = os.environ.get('MONGO_URL', "mongodb+srv://filter6:filter6@cluster0.hzvvygf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 #Downloader
 DOWNLOAD_LOCATION = environ.get("DOWNLOAD_LOCATION", "./DOWNLOADS/AudioBoT/")
 
 # Others
 DELETE_CHANNELS = [int(dch) if id_pattern.search(dch) else dch for dch in environ.get('DELETE_CHANNELS', '').split()]
-PORT = os.environ.get("PORT", "3124")
+PORT = os.environ.get("PORT", "4534")
 MAX_BTN = int(environ.get('MAX_BTN', "10"))
 S_GROUP = environ.get('S_GROUP',"https://t.me/+QiSZO0vHKMA4YjJl")
 MAIN_CHANNEL = environ.get('MAIN_CHANNEL',"https://t.me/+QiSZO0vHKMA4YjJl")
 FILE_FORWARD = environ.get('FILE_FORWARD',"")
 MSG_ALRT = environ.get('MSG_ALRT', '𝐓𝐡𝐚𝐧𝐤 𝐲𝐨𝐮 THEwick 💜')
 FILE_CHANNEL = int(environ.get('FILE_CHANNEL', "-1002843083384"))
-LOG_CHANNEL = int(environ.get('LOG_CHANNEL', "-1002761779764"))
+LOG_CHANNEL = int(environ.get('LOG_CHANNEL', "-1002844168611"))
 SUPPORT_CHAT = environ.get('SUPPORT_CHAT', '@CT_Arena')
 AUTO_DELETE = is_enabled((environ.get('AUTO_DELETE', "True")), True)
 P_TTI_SHOW_OFF = is_enabled((environ.get('P_TTI_SHOW_OFF', "False")), False)
