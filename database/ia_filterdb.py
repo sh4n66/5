@@ -4,26 +4,23 @@ import base64
 from struct import pack
 from pyrogram.file_id import FileId
 from pymongo.errors import DuplicateKeyError
+from umongo import Document, fields
 from motor.motor_asyncio import AsyncIOMotorClient
 from umongo.frameworks.motor_asyncio import MotorAsyncIOInstance
-from umongo import Document, fields
 from marshmallow.exceptions import ValidationError
 from info import DATABASE_URI, DATABASE_NAME, COLLECTION_NAME, USE_CAPTION_FILTER, MAX_BTN
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-# ------------------------------------------------------
-# Database Connection (compatible with umongo >= 3.x)
-# ------------------------------------------------------
+# Connect to MongoDB
 client = AsyncIOMotorClient(DATABASE_URI)
 db = client[DATABASE_NAME]
 
-instance = MotorAsyncIOInstance()
-instance.init(db)
+# For umongo >= 3.x
+instance = MotorAsyncIOInstance(db)
 
-
-# ------------------------------------------------------
+# ----------------------------------------------------
 # Media Document Schema
 # ------------------------------------------------------
 @instance.register
