@@ -1,23 +1,18 @@
-#  @MrMNTG @MusammilN
-#please give credits https://github.com/MN-BOTS/ShobanaFilterBot
 import logging
-from struct import pack
-import re
-import base64
-from pyrogram.file_id import FileId
-from pymongo.errors import DuplicateKeyError
-from umongo import Instance, Document, fields
 from motor.motor_asyncio import AsyncIOMotorClient
-from marshmallow.exceptions import ValidationError
-from info import DATABASE_URI, DATABASE_NAME, COLLECTION_NAME, USE_CAPTION_FILTER
+from umongo.frameworks.motor_asyncio import MotorAsyncIOInstance
+from umongo import Document, fields
+from info import DATABASE_URI, DATABASE_NAME, COLLECTION_NAME
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-
+# MongoDB connection
 client = AsyncIOMotorClient(DATABASE_URI)
 db = client[DATABASE_NAME]
-instance = Instance(db)   # ✅ NEW way in umongo 3.x
+
+# Correct instance for umongo 3.x
+instance = MotorAsyncIOInstance(db)
 
 @instance.register
 class Media(Document):
