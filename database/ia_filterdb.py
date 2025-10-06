@@ -4,41 +4,46 @@ import base64
 from struct import pack
 from pyrogram.file_id import FileId
 from pymongo.errors import DuplicateKeyError
-from umongo import Instance, Document, fields
 from motor.motor_asyncio import AsyncIOMotorClient
+from umongo.frameworks.motor_asyncio import MotorAsyncIOInstance
+from umongo import Document, fields
 from marshmallow.exceptions import ValidationError
 from info import DATABASE_URI, DATABASE_NAME, COLLECTION_NAME, USE_CAPTION_FILTER, MAX_BTN
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-# Connect to MongoDB
+# ------------------------------------------------------
+# Database Connection (compatible with umongo >= 3.x)
+# ------------------------------------------------------
 client = AsyncIOMotorClient(DATABASE_URI)
 db = client[DATABASE_NAME]
 
-# For umongo >= 3.x
-instance = Instance(db)
+instance = MotorAsyncIOInstance()
+instance.init(db)
 
 
+# ------------------------------------------------------
+# Media Document Schema
+# ------------------------------------------------------
 @instance.register
 class Media(Document):
-    file_id = fields.StrField(attribute='_id')
-    file_ref = fields.StrField(allow_none=True)
-    file_name = fields.StrField(required=True)
-    file_size = fields.IntField(required=True)
-    file_type = fields.StrField(allow_none=True)
-    mime_type = fields.StrField(allow_none=True)
-    caption = fields.StrField(allow_none=True)
+    _id = fields.StringField(required=True)  # replaces file_id=fields.StrField(attribute='_id')
+    file_ref = fields.StringField(allow_none=True)
+    file_name = fields.StringField(required=True)
+    file_size = fields.IntegerField(required=True)
+    file_type = fields.StringField(allow_none=True)
+    mime_type = fields.StringField(allow_none=True)
+    caption = fields.StringField(allow_none=True)
 
     class Meta:
         collection_name = COLLECTION_NAME
-        indexes = ('$file_name',)
+        indexes = ("file_name",)
 
 
-# -----------------------------
+# ------------------------------------------------------
 # Database utility functions
-# -----------------------------
-
+# ------------------------------------------------------
 async def save_file(media):
     """Save file in database"""
     file_id, file_ref = unpack_new_file_id(media.file_id)
@@ -46,7 +51,7 @@ async def save_file(media):
 
     try:
         file = Media(
-            file_id=file_id,
+            _id=file_id,
             file_ref=file_ref,
             file_name=file_name,
             file_size=media.file_size,
@@ -61,10 +66,10 @@ async def save_file(media):
     try:
         await file.commit()
     except DuplicateKeyError:
-        logger.warning(f"{getattr(media, 'file_name', 'NO_FILE')} is already saved in database")
+        logger.warning(f"{getattr(media, 'file_name', 'NO_FILE')} already exists in database")
         return False, 0
     else:
-        logger.info(f"{getattr(media, 'file_name', 'NO_FILE')} is saved to database")
+        logger.info(f"{getattr(media, 'file_name', 'NO_FILE')} saved to database")
         return True, 1
 
 
@@ -92,28 +97,28 @@ async def get_search_results(query, file_type=None, max_results=MAX_BTN, offset=
     if file_type:
         filter_q["file_type"] = file_type
 
-    total_results = await Media.count_documents(filter_q)
+    # use db[collection] directly for async motor ops
+    total_results = await db[COLLECTION_NAME].count_documents(filter_q)
     next_offset = offset + max_results
     if next_offset > total_results:
         next_offset = ""
 
-    cursor = Media.find(filter_q).sort("$natural", -1).skip(offset).limit(max_results)
+    cursor = db[COLLECTION_NAME].find(filter_q).sort("$natural", -1).skip(offset).limit(max_results)
     files = await cursor.to_list(length=max_results)
 
     return files, next_offset, total_results
 
 
 async def get_file_details(query):
-    filter_q = {"file_id": query}
-    cursor = Media.find(filter_q)
+    filter_q = {"_id": query}
+    cursor = db[COLLECTION_NAME].find(filter_q)
     filedetails = await cursor.to_list(length=1)
     return filedetails
 
 
-# -----------------------------
+# ------------------------------------------------------
 # Helpers for encoding/decoding
-# -----------------------------
-
+# ------------------------------------------------------
 def encode_file_id(s: bytes) -> str:
     r = b""
     n = 0
