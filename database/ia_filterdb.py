@@ -4,28 +4,30 @@ import base64
 from struct import pack
 from pyrogram.file_id import FileId
 from pymongo.errors import DuplicateKeyError
-from umongo import Document, fields
 from motor.motor_asyncio import AsyncIOMotorClient
 from umongo.frameworks.motor_asyncio import MotorAsyncIOInstance
+from umongo import Document, fields
 from marshmallow.exceptions import ValidationError
 from info import DATABASE_URI, DATABASE_NAME, COLLECTION_NAME, USE_CAPTION_FILTER, MAX_BTN
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-# Connect to MongoDB
+# -----------------------------
+# MongoDB + umongo setup
+# -----------------------------
 client = AsyncIOMotorClient(DATABASE_URI)
 db = client[DATABASE_NAME]
 
-# For umongo >= 3.x
+# Correct instance creation for umongo 3.x
 instance = MotorAsyncIOInstance(db)
 
-# ----------------------------------------------------
-# Media Document Schema
-# ------------------------------------------------------
+# -----------------------------
+# Media Document
+# -----------------------------
 @instance.register
 class Media(Document):
-    _id = fields.StrField(required=True)  # MongoDB's primary key
+    _id = fields.StrField(required=True)       # MongoDB primary key
     file_ref = fields.StrField(allow_none=True)
     file_name = fields.StrField(required=True)
     file_size = fields.IntField(required=True)
@@ -37,10 +39,9 @@ class Media(Document):
         collection_name = COLLECTION_NAME
         indexes = ('$file_name',)
 
-
-# ------------------------------------------------------
+# -----------------------------
 # Database utility functions
-# ------------------------------------------------------
+# -----------------------------
 async def save_file(media):
     """Save file in database"""
     file_id, file_ref = unpack_new_file_id(media.file_id)
@@ -63,10 +64,10 @@ async def save_file(media):
     try:
         await file.commit()
     except DuplicateKeyError:
-        logger.warning(f"{getattr(media, 'file_name', 'NO_FILE')} already exists in database")
+        logger.warning(f"{getattr(media, 'file_name', 'NO_FILE')} is already saved in database")
         return False, 0
     else:
-        logger.info(f"{getattr(media, 'file_name', 'NO_FILE')} saved to database")
+        logger.info(f"{getattr(media, 'file_name', 'NO_FILE')} is saved to database")
         return True, 1
 
 
@@ -94,7 +95,6 @@ async def get_search_results(query, file_type=None, max_results=MAX_BTN, offset=
     if file_type:
         filter_q["file_type"] = file_type
 
-    # use db[collection] directly for async motor ops
     total_results = await db[COLLECTION_NAME].count_documents(filter_q)
     next_offset = offset + max_results
     if next_offset > total_results:
@@ -112,10 +112,9 @@ async def get_file_details(query):
     filedetails = await cursor.to_list(length=1)
     return filedetails
 
-
-# ------------------------------------------------------
+# -----------------------------
 # Helpers for encoding/decoding
-# ------------------------------------------------------
+# -----------------------------
 def encode_file_id(s: bytes) -> str:
     r = b""
     n = 0
