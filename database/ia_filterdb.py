@@ -28,13 +28,13 @@ instance = MotorAsyncIOInstance(db)
 # -----------------------------
 @instance.register
 class Media(Document):
-    _id = fields.StrField(required=True)       # MongoDB primary key
-    file_ref = fields.StrField(allow_none=True)
-    file_name = fields.StrField(required=True)
+    _id = fields.StringField(load_default=None, dump_default=None)  # MongoDB primary key
+    file_ref = fields.StringField(allow_none=True)
+    file_name = fields.StringField(required=True)
     file_size = fields.IntField(required=True)
-    file_type = fields.StrField(allow_none=True)
-    mime_type = fields.StrField(allow_none=True)
-    caption = fields.StrField(allow_none=True)
+    file_type = fields.StringField(allow_none=True)
+    mime_type = fields.StringField(allow_none=True)
+    caption = fields.StringField(allow_none=True)
 
     class Meta:
         indexes = ('$file_name',)
